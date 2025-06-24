@@ -1,0 +1,37 @@
+{
+  "name": "simple-notes",
+  "version": "0.1.0",
+  "description": "A simple note taking app",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "restart": "nodemon"
+  },
+  "author": "Omar Handouk",
+  "license": "MIT",
+  "packageManager": "pnpm@10.12.1",
+  "engines": {
+    "node": "22.16.0"
+  },
+  "type": "commonjs",
+  "dependencies": {
+    "config": "^4.0.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "helmet": "^8.1.0",
+    "http-status-codes": "^2.3.0",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.14.1",
+    "sequelize": "^6.37.7"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^24.0.4",
+    "@types/sequelize": "^4.28.20",
+    "nodemon": "^3.1.10",
+    "sequelize-cli": "^6.6.3",
+    "sqlite3": "^5.1.7"
+  }
+}
