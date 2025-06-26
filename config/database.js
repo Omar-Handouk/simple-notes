@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  'development': {
+  'dev': {
     'dialect': 'sqlite',
     'storage': './data/db.sqlite3'
   },

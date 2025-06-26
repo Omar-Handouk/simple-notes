@@ -8,7 +8,10 @@ const helmet            = require('helmet');
 const morgan            = require('morgan');
 const { Sequelize }     = require('sequelize');
 const { StatusCodes }   = require('http-status-codes');
-const initRoutes        = require('./routes/index.js');
+
+const db                = require('./models/index.js');
+const controllers       = require('./controllers/index.js')(db);
+const routes            = require('./routes/index.js')(controllers);
 
 const APP_ENV   = process.env.NODE_ENV ?? 'dev';
 const APP_HOST  = process.env.APP_HOST ?? '0.0.0.0';
@@ -35,8 +38,6 @@ const main = async (app, sequelize) => {
         console.error(`> Error stack\n${err.stack}`);
         process.exit(1);
     }
-
-    const routes = await initRoutes();
 
     app.use(`/api/v${apiVersion}`, routes);
 
