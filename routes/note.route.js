@@ -1,20 +1,38 @@
 'use strict';
-const { Router }        = require('express');
-const { StatusCodes }   = require('http-status-codes');
+const { Router }            = require('express');
+const { StatusCodes }       = require('http-status-codes');
+const { validationResult }  = require('express-validator');
+
+const { creationSchema, updateSchema } = require('../validations/note.validation.js');
 
 module.exports = (controller) => {
     const router = Router();
 
-    router.post('/', async (req, res) => {
-        const { title, body, columnId } = req.body;
-        
-        const note = await controller.createNote({
-            title,
-            body,
-            columnId
-        });
+    router.post('/', creationSchema,
+        /**
+         * @param {import('express').Request} req 
+         * @param {import('express').Response} res 
+         * @returns 
+         */
+        async (req, res) => {
+            const valResults = validationResult(req);
+            if (!valResults.isEmpty()) {
+                return res.status(StatusCodes.BAD_REQUEST).json({
+                    statusCode: StatusCodes.BAD_REQUEST,
+                    msg: 'Bad Request',
+                    ...valResults
+                });
+            }
 
-        return res.status(StatusCodes.CREATED).json(note);
+            const { title, body, columnId } = req.body;
+
+            const note = await controller.createNote({
+                title,
+                body,
+                columnId
+            });
+
+            return res.status(StatusCodes.CREATED).json(note);
     });
 
     router.get('/:noteId', async (req, res) => {
@@ -36,16 +54,31 @@ module.exports = (controller) => {
         return res.status(StatusCodes.OK).json(notes);
     });
 
-    router.put('/:noteId', async (req, res) => {
-        const { title, body, columnId } = req.body;
+    router.put('/:noteId', updateSchema,
+        /**
+         * @param {import('express').Request} req 
+         * @param {import('express').Response} res 
+         * @returns 
+         */
+        async (req, res) => {
+            const valResults = validationResult(req);
+            if (!valResults.isEmpty()) {
+                return res.status(StatusCodes.BAD_REQUEST).json({
+                    statusCode: StatusCodes.BAD_REQUEST,
+                    msg: 'Bad Request',
+                    ...valResults
+                });
+            }
 
-        const note = await controller.updateNote(req.params.noteId, {
-            title,
-            body,
-            columnId
-        });
+            const { title, body, columnId } = req.body;
 
-        return res.status(StatusCodes.OK).json(note);
+            const note = await controller.updateNote(req.params.noteId, {
+                title,
+                body,
+                columnId
+            });
+
+            return res.status(StatusCodes.OK).json(note);
     });
 
     router.delete('/:noteId', async (req, res) => {

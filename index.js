@@ -7,7 +7,7 @@ const express           = require('express');
 const helmet            = require('helmet');
 const morgan            = require('morgan');
 const { Sequelize }     = require('sequelize');
-const { StatusCodes }   = require('http-status-codes');
+const { StatusCodes, getReasonPhrase }   = require('http-status-codes');
 
 const db                = require('./models/index.js');
 const controllers       = require('./controllers/index.js')(db);
@@ -47,6 +47,14 @@ const main = async (app, sequelize) => {
 
     app.use((err, _req, res, _next) => {
         console.error(err);
+
+        if (err.statusCode) {
+            return res.status(err.statusCode).json({
+                statusCode: err.statusCode,
+                msg: getReasonPhrase(err.statusCode)
+            });
+        }
+        
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('500 Internal Server Error');
     });
 
